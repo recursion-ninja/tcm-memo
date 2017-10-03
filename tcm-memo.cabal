@@ -1,0 +1,109 @@
+name:               tcm-memo
+version:            1.0.0.0
+
+synopsis:           A binding to a C++ hashtable for thread-safe memoization.
+
+-- A longer description of the package.
+-- description:
+license:            BSD3
+--license-file:       LICENSE
+author:             Ward Wheeler
+maintainer:         wheeler@amnh.org
+
+-- A copyright notice.
+-- copyright:
+
+category:           Biology
+build-type:         Simple
+extra-source-files: README.md
+
+cabal-version:      >= 1.22
+
+library
+
+  -- Other library packages from which modules are imported.
+  build-depends:    base
+                  , deepseq
+                  , hashable
+                  , lens
+                  , QuickCheck
+
+  -- We must provide the full relative path to every C file that the project depends on.
+  c-sources:        memoized-tcm/costMatrixWrapper.c
+                    memoized-tcm/dynamicCharacterOperations.c
+
+  cc-options:       --std=c11
+                     
+  cxx-sources:      memoized-tcm/costMatrix.cpp
+
+  cxx-options:      --std=c++11
+
+  -- Modules exported by the library.
+  exposed-modules:  Bio.Character.Exportable.Class
+                    Data.TCM.Memoized
+                    Data.TCM.Memoized.FFI
+
+  -- This library is required for the C++ standard template library.                    
+  extra-libraries:  stdc++
+
+  default-language: Haskell2010
+
+  ghc-options:      -O2
+                    -- Turns on *almost* all warnings
+                    -Wall
+                    -- Checks for future compatibility with predicted language changes
+                    -Wcompat
+                    -fwarn-dodgy-foreign-imports
+                    -fwarn-duplicate-exports
+                    -fwarn-incomplete-patterns
+                    -fwarn-incomplete-record-updates
+                    -fwarn-missing-fields
+                    -fwarn-missing-monadfail-instances
+                    -fwarn-missing-signatures
+--                       -fwarn-mrp-compat
+                    -fwarn-overlapping-patterns
+                    -fwarn-redundant-constraints
+                    -fwarn-tabs
+                    -fwarn-unrecognised-warning-flags
+                    -fwarn-unused-binds
+                    -fwarn-unused-do-bind
+                    -fwarn-unused-imports
+                    -fwarn-unused-matches
+                    -Wincomplete-uni-patterns
+
+  hs-source-dirs:   src
+                    
+  -- Here we list all directories that contain C header files that the FFI tools will need
+  -- to locate when preprocessing the C files. Without listing the directories containing
+  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
+  -- the requisite files.
+  -- Note also, that the parent directory of the nessicary C header files must be specified.
+  -- The preprocesser will not recursively look in subdirectories for C header files!
+  include-dirs:     memoized-tcm
+
+  -- LANGUAGE extensions used by modules in this package.
+  other-extensions: MonadFailDesugaring
+
+
+executable use-the-code
+
+  main-is:             Main.hs
+
+  build-depends:       base
+                     , lens
+                     , safe
+                     , tcm-memo
+                     
+  default-language:    Haskell2010
+
+  ghc-options:         -O2 -Wall
+                       -fwarn-duplicate-exports
+                       -fwarn-incomplete-patterns
+                       -fwarn-missing-signatures
+                       -fwarn-overlapping-patterns
+                       -fwarn-tabs
+                       -fwarn-unused-binds
+                       -fwarn-unused-do-bind
+                       -fwarn-unused-imports
+                       -fwarn-unused-matches
+
