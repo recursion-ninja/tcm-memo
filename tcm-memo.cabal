@@ -48,28 +48,7 @@ library
 
   default-language: Haskell2010
 
-  ghc-options:      -O2
-                    -- Turns on *almost* all warnings
-                    -Wall
-                    -- Checks for future compatibility with predicted language changes
-                    -Wcompat
-                    -fwarn-dodgy-foreign-imports
-                    -fwarn-duplicate-exports
-                    -fwarn-incomplete-patterns
-                    -fwarn-incomplete-record-updates
-                    -fwarn-missing-fields
-                    -fwarn-missing-monadfail-instances
-                    -fwarn-missing-signatures
---                       -fwarn-mrp-compat
-                    -fwarn-overlapping-patterns
-                    -fwarn-redundant-constraints
-                    -fwarn-tabs
-                    -fwarn-unrecognised-warning-flags
-                    -fwarn-unused-binds
-                    -fwarn-unused-do-bind
-                    -fwarn-unused-imports
-                    -fwarn-unused-matches
-                    -Wincomplete-uni-patterns
+  ghc-options:      -O2 -Wall
 
   hs-source-dirs:   src
                     
@@ -80,9 +59,6 @@ library
   -- Note also, that the parent directory of the nessicary C header files must be specified.
   -- The preprocesser will not recursively look in subdirectories for C header files!
   include-dirs:     memoized-tcm
-
-  -- LANGUAGE extensions used by modules in this package.
-  other-extensions: MonadFailDesugaring
 
 
 executable use-the-code
@@ -97,13 +73,4 @@ executable use-the-code
   default-language:    Haskell2010
 
   ghc-options:         -O2 -Wall
-                       -fwarn-duplicate-exports
-                       -fwarn-incomplete-patterns
-                       -fwarn-missing-signatures
-                       -fwarn-overlapping-patterns
-                       -fwarn-tabs
-                       -fwarn-unused-binds
-                       -fwarn-unused-do-bind
-                       -fwarn-unused-imports
-                       -fwarn-unused-matches
 
