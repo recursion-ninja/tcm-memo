@@ -74,10 +74,10 @@ data ForeignVoid deriving (Generic)
 
 -- |
 -- A type-safe wrapper for the mutable, memoized TCm.
-data MemoizedCostMatrix
-   = MemoizedCostMatrix
-   { costMatrix :: StablePtr ForeignVoid
-   } deriving (Eq, Generic)
+newtype MemoizedCostMatrix
+      = MemoizedCostMatrix
+      { costMatrix :: StablePtr ForeignVoid
+      } deriving (Eq, Generic)
 
 
 {--}
@@ -99,7 +99,7 @@ instance Arbitrary CDynamicChar where
         numElems    <- (arbitrary :: Gen Int) `suchThat` (\x -> 0 < x && x <= 100)
         fullBitVals <- vectorOf numElems (arbitrary :: Gen CBufferUnit)
         -- Note there is a faster way to do this loop in 2 steps by utilizing 2s compliment subtraction and setbit.
-        let mask    = foldl' (\val i -> val `setBit` i) (zeroBits :: CBufferUnit) [0..numElems]
+        let mask    = foldl' setBit (zeroBits :: CBufferUnit) [0..numElems]
         remBitVals  <- if   numElems == 0
                        then pure []
                        else (pure . (mask .&.)) <$> (arbitrary :: Gen CBufferUnit)
@@ -186,18 +186,6 @@ instance Storable DCElement where
         (#poke struct dcElement_t, alphSize) ptr alphLen
         (#poke struct dcElement_t, element ) ptr element
 
-
-{-
-instance Storable MemoizedCostMatrix where
-
-    sizeOf    _ = (#size void*) -- #size is a built-in that works with arrays, as are #peek and #poke, below
-
-    alignment _ = alignment (undefined :: CBufferUnit)
-
-    peek _ptr   = undefined
-
-    poke _ptr   = undefined
--}
 
 
 -- TODO: For now we only allocate 2d matrices. 3d will come later.
