@@ -22,11 +22,12 @@ cabal-version:      >= 1.22
 library
 
   -- Other library packages from which modules are imported.
-  build-depends:    base
+  build-depends:    base       >=4.6.0.0
                   , deepseq
                   , hashable
                   , lens
-                  , QuickCheck
+                   -- For Arbitrary CULong instance
+                  , QuickCheck >=2.10
 
   -- We must provide the full relative path to every C file that the project depends on.
   c-sources:        memoized-tcm/costMatrixWrapper.c
@@ -65,7 +66,7 @@ executable use-the-code
 
   main-is:             Main.hs
 
-  build-depends:       base
+  build-depends:       base >=4.6.0.0
                      , lens
                      , safe
                      , tcm-memo
