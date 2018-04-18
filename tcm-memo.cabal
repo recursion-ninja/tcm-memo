@@ -48,7 +48,7 @@ library
 
   default-language: Haskell2010
 
-  ghc-options:      -O2 -Wall -fPIC
+  ghc-options:      -O2 -Wall
 
   hs-source-dirs:   src
                     
