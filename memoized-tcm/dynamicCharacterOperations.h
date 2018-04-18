@@ -61,14 +61,13 @@
  *  stdint is a library that provides int values for all architectures. This will allow the code to
  *  compile even on architectures on which int != 32 bits (and, more to the point, unsigned long int != 64 bits).
  */
+#include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdint.h>
 
 /** Following constants must be static to prevent compilation issues. */
-static const size_t   BITS_IN_BYTE   = 8;                    // so bytes are set to 8, for all architectures
-static const size_t   INT_WIDTH      = sizeof(uint64_t);     // don't forget: in bytes
-static const size_t   WORD_WIDTH     = 8 * sizeof(uint64_t); // BITS_IN_BYTE * INT_WIDTH; <-- because HSC is dumb!
+static const size_t   WORD_WIDTH     = 8 * sizeof(uint64_t);
 static const uint64_t CANONICAL_ONE  = 1;
 static const uint64_t CANONICAL_ZERO = 0;
 

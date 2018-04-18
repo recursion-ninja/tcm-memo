@@ -157,7 +157,7 @@ dcElement_t *allocateDCElement( const size_t alphSize ) {
     // First create dynamic character with empty character field.
   dcElement_t *output = (dcElement_t *) malloc( sizeof(dcElement_t) );
     output->alphSize    = alphSize;
-    output->element     = (packedChar*) calloc( dcElemSize(alphSize), INT_WIDTH );
+    output->element     = (packedChar*) calloc( dcElemSize(alphSize), sizeof(uint64_t) );
     if (output->element == NULL) {
         printf("Out of memory.\n");
         fflush(stdout);
@@ -210,7 +210,7 @@ dynChar_t *makeDynamicChar( size_t alphSize, size_t numElems, packedChar *values
     output->alphSize   = alphSize;
     output->numElems   = numElems;
     output->dynCharLen = dynCharSize( alphSize, numElems );
-    output->dynChar    = (packedChar*) calloc( output->dynCharLen, INT_WIDTH );
+    output->dynChar    = (packedChar*) calloc( output->dynCharLen, sizeof(uint64_t) );
     if (output->dynChar == NULL) {
         printf("Out of memory.\n");
         fflush(stdout);
