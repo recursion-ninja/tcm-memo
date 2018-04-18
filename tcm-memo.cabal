@@ -38,15 +38,15 @@ library
 
   cxx-options:      --std=c++11
 
+  default-language: Haskell2010
+
   -- Modules exported by the library.
   exposed-modules:  Bio.Character.Exportable.Class
                     Data.TCM.Memoized
                     Data.TCM.Memoized.FFI
 
-  -- This library is required for the C++ standard template library.                    
+  -- This library is required for the C++ standard template library.
   extra-libraries:  stdc++
-
-  default-language: Haskell2010
 
   ghc-options:      -O2 -Wall
 
