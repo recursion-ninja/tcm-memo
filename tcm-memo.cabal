@@ -74,6 +74,8 @@ executable undependant-executable
 
   ghc-options:      -O2 -Wall
 
+  hs-source-dirs:   app
+
 
 executable independant-executable
 
@@ -104,7 +106,7 @@ executable independant-executable
 
   ghc-options:      -O2 -Wall
 
-  hs-source-dirs:   ., src
+  hs-source-dirs:   app, src
                     
   -- Here we list all directories that contain C header files that the FFI tools will need
   -- to locate when preprocessing the C files. Without listing the directories containing
@@ -150,7 +152,7 @@ benchmark benchmark-suite
 
   ghc-options:      -O2 -Wall
 
-  hs-source-dirs:   ., src
+  hs-source-dirs:   bench, src
                     
   -- Here we list all directories that contain C header files that the FFI tools will need
   -- to locate when preprocessing the C files. Without listing the directories containing
@@ -195,7 +197,7 @@ test-suite testsuite
 
   ghc-options:      -O2 -Wall
 
-  hs-source-dirs:   ., src
+  hs-source-dirs:   test, src
                     
   -- Here we list all directories that contain C header files that the FFI tools will need
   -- to locate when preprocessing the C files. Without listing the directories containing
