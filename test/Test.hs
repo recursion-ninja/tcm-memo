@@ -14,6 +14,11 @@ newtype MyStruct = T [CULong]
     deriving (Show)
 
 
+instance Arbitrary MyStruct where
+
+    arbitrary = T . pure <$> choose (1,31)
+
+
 instance Exportable MyStruct where
 
     toExportableBuffer (T xs) =
@@ -36,9 +41,9 @@ instance NFData MyStruct where
 main :: IO ()
 main = quickCheck prop
   where
-    f x y = getMedianAndCost linearNormTCM (T [x]) (T [y])
+    f = getMedianAndCost linearNormTCM
 
-    prop :: CULong -> CULong -> Bool
+    prop :: MyStruct -> MyStruct -> Bool
     prop x y = rnf (f x y) == ()
 
 
