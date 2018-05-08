@@ -35,7 +35,7 @@ int call_getSetCost_C(costMatrix_p untyped_self, dcElement_t* left, dcElement_t*
 costMedian_t* allocCostMedian_t (size_t alphabetSize) {
     costMedian_t* toReturn = (costMedian_t*) malloc( sizeof(costMedian_t) );
     toReturn->first        = 0;
-    toReturn->second       = (uint64_t*) calloc(dcElemSize(alphabetSize), INT_WIDTH);
+    toReturn->second       = (uint64_t*) calloc(dcElemSize(alphabetSize), sizeof(uint64_t));
     return toReturn;
 }
 
@@ -169,7 +169,7 @@ costMedian_t* CostMatrix::computeCostMedian(keys_t keys) {
 //    packedChar*   median     = (packedChar*) calloc( elemArrLen, sizeof(uint64_t) );
     dcElement_t*  firstKey   = &keys.first;
     dcElement_t*  secondKey  = &keys.second;
-    packedChar*   curMedian  = (packedChar*  ) calloc(elemArrLen, INT_WIDTH);  // don't free, it's going into toReturn
+    packedChar*   curMedian  = (packedChar*  ) calloc(elemArrLen, sizeof(uint64_t));  // don't free, it's going into toReturn
     costMedian_t* toReturn   = (costMedian_t*) malloc(sizeof(costMedian_t)); // array is alloc'ed above
     keys_t*       searchKey  = allocKeys_t(alphabetSize);
 
