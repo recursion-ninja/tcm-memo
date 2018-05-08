@@ -74,3 +74,38 @@ executable use-the-code
 
   ghc-options:         -O2 -Wall
 
+
+Test-suite testsuite
+
+  main-is:             Test.hs
+
+  type:                exitcode-stdio-1.0
+  
+  build-depends:       base >=4.6.0.0
+                     , lens
+                     , deepseq
+                     , QuickCheck >= 2.10
+                     
+  default-language:    Haskell2010
+
+  ghc-options:         -O2 -Wall
+
+  -- Modules exported by the library.
+  other-modules:    Bio.Character.Exportable.Class
+                    Data.TCM.Memoized
+                    Data.TCM.Memoized.FFI
+
+  -- This library is required for the C++ standard template library.
+  extra-libraries:  stdc++
+
+  ghc-options:      -O2 -Wall
+
+  hs-source-dirs:   ., src
+                    
+  -- Here we list all directories that contain C header files that the FFI tools will need
+  -- to locate when preprocessing the C files. Without listing the directories containing
+  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
+  -- the requisite files.
+  -- Note also, that the parent directory of the nessicary C header files must be specified.
+  -- The preprocesser will not recursively look in subdirectories for C header files!
+  include-dirs:     memoized-tcm
