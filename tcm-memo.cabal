@@ -18,15 +18,8 @@ description:        This package is designed to provide a "minimal working examp
                     to test the cxx-sources and the cxx-options buildinfo flags.
                     The code was pulled out PCG, https://github.com/amnh/pcg
 
-library
 
-  -- Other library packages from which modules are imported.
-  build-depends:    base       >=4.6.0.0
-                  , deepseq
-                  , hashable
-                  , lens
-                   -- For Arbitrary CULong instance
-                  , QuickCheck >=2.10
+common ffi-build-info
 
   -- We must provide the full relative path to every C file that the project depends on.
   c-sources:        memoized-tcm/costMatrixWrapper.c
@@ -39,175 +32,145 @@ library
   cxx-options:      --std=c++11
 
   default-language: Haskell2010
+
+  -- This library is required for the C++ standard template library.
+  extra-libraries:  stdc++
+
+  -- Here we list all directories that contain C header files that the FFI tools will need
+  -- to locate when preprocessing the C files. Without listing the directories containing
+  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
+  -- the requisite files.
+  -- Note also, that the parent directory of the nessicary C header files must be specified.
+  -- The preprocesser will not recursively look in subdirectories for C header files!
+  include-dirs:     memoized-tcm
+
+
+common language-spec
+
+  build-depends:    base       >=4.10.0
+                  , lens
+       
+  default-language: Haskell2010
+
+  ghc-options:      -O2 -Wall
+
+                    
+common lib-build-info
+
+  -- Other library packages from which modules are imported.
+  build-depends:    deepseq
+                  , hashable
+                   -- For Arbitrary CULong instance
+                  , QuickCheck >=2.10
+
+  hs-source-dirs:   lib
+
+  -- Modules exported by the library.
+  other-modules:    Bio.Character.Exportable.Class
+                    Data.TCM.Memoized
+                    Data.TCM.Memoized.FFI
+
+                    
+library
+
+  import:           ffi-build-info
+                  , language-spec
+
+  -- Other library packages from which modules are imported.
+  build-depends:    deepseq
+                  , hashable
+                   -- For Arbitrary CULong instance
+                  , QuickCheck >=2.10
 
   -- Modules exported by the library.
   exposed-modules:  Bio.Character.Exportable.Class
                     Data.TCM.Memoized
                     Data.TCM.Memoized.FFI
 
-  -- This library is required for the C++ standard template library.
-  extra-libraries:  stdc++
-
-  ghc-options:      -O2 -Wall
-
-  hs-source-dirs:   src
+  hs-source-dirs:   lib
                     
-  -- Here we list all directories that contain C header files that the FFI tools will need
-  -- to locate when preprocessing the C files. Without listing the directories containing
-  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
-  -- the requisite files.
-  -- Note also, that the parent directory of the nessicary C header files must be specified.
-  -- The preprocesser will not recursively look in subdirectories for C header files!
-  include-dirs:     memoized-tcm
 
+executable exe-no-lib
 
-executable undependant-executable
+  import:           ffi-build-info
+                  , language-spec
+                  , lib-build-info
 
-  main-is:          Dependant.hs
+  main-is:          Main.hs
 
-  build-depends:    base >=4.6.0.0
-                  , lens
-                  , safe
-                  , tcm-memo
-                     
-  default-language: Haskell2010
-
-  ghc-options:      -O2 -Wall
+  build-depends:    safe
 
   hs-source-dirs:   app
 
 
-executable independant-executable
+executable exe-with-lib
 
-  main-is:          Independant.hs
+  import:           language-spec
 
-  build-depends:    base >=4.6.0.0
-                  , deepseq
-                  , hashable
-                  , lens
-                   -- For Arbitrary CULong instance
-                  , QuickCheck >=2.10
-                  , safe
+  main-is:          Main.hs
 
-  -- We must provide the full relative path to every C file that the project depends on.
-  c-sources:        memoized-tcm/costMatrixWrapper.c
-                    memoized-tcm/dynamicCharacterOperations.c
+  build-depends:    safe
+                  , tcm-memo
 
-  cc-options:       --std=c11
-                     
-  cxx-sources:      memoized-tcm/costMatrix.cpp
-
-  cxx-options:      --std=c++11
-
-  default-language: Haskell2010
-
-  -- This library is required for the C++ standard template library.
-  extra-libraries:  stdc++
-
-  ghc-options:      -O2 -Wall
-
-  hs-source-dirs:   app, src
-                    
-  -- Here we list all directories that contain C header files that the FFI tools will need
-  -- to locate when preprocessing the C files. Without listing the directories containing
-  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
-  -- the requisite files.
-  -- Note also, that the parent directory of the nessicary C header files must be specified.
-  -- The preprocesser will not recursively look in subdirectories for C header files!
-  include-dirs:     memoized-tcm
-
-  -- Modules exported by the library.
-  other-modules:    Bio.Character.Exportable.Class
-                    Data.TCM.Memoized
-                    Data.TCM.Memoized.FFI
+  hs-source-dirs:   app
 
 
-benchmark benchmark-suite
+benchmark bench-no-lib
 
-  type:             exitcode-stdio-1.0
+  import:           ffi-build-info
+                  , language-spec
+                  , lib-build-info
 
   main-is:          Bench.hs
 
-  build-depends:    base >=4.6.0.0
-                  , criterion
-                  , deepseq
-                  , hashable
-                  , lens
-                  , QuickCheck >=2.10
+  type:             exitcode-stdio-1.0
+
+  build-depends:    criterion
                      
-  -- We must provide the full relative path to every C file that the project depends on.
-  c-sources:        memoized-tcm/costMatrixWrapper.c
-                    memoized-tcm/dynamicCharacterOperations.c
-
-  cc-options:       --std=c11
-                     
-  cxx-sources:      memoized-tcm/costMatrix.cpp
-
-  cxx-options:      --std=c++11
-
-  default-language: Haskell2010
-
-  -- This library is required for the C++ standard template library.
-  extra-libraries:  stdc++
-
-  ghc-options:      -O2 -Wall
-
-  hs-source-dirs:   bench, src
-                    
-  -- Here we list all directories that contain C header files that the FFI tools will need
-  -- to locate when preprocessing the C files. Without listing the directories containing
-  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
-  -- the requisite files.
-  -- Note also, that the parent directory of the nessicary C header files must be specified.
-  -- The preprocesser will not recursively look in subdirectories for C header files!
-  include-dirs:     memoized-tcm
-
-  -- Modules exported by the library.
-  other-modules:    Bio.Character.Exportable.Class
-                    Data.TCM.Memoized
-                    Data.TCM.Memoized.FFI
+  hs-source-dirs:   bench
 
  
-test-suite testsuite
+benchmark bench-with-lib
+
+  import:           language-spec
+
+  main-is:          Bench.hs
+
+  type:             exitcode-stdio-1.0
+
+  build-depends:    criterion
+                  , deepseq
+                  , tcm-memo
+                  , QuickCheck >= 2.10
+
+  hs-source-dirs:   bench
+
+ 
+test-suite test-no-lib
+
+  import:           ffi-build-info
+                  , language-spec
+                  , lib-build-info
 
   main-is:          Test.hs
 
   type:             exitcode-stdio-1.0
   
-  build-depends:    base >=4.6.0.0
-                  , deepseq
-                  , hashable
-                  , lens
+  build-depends:    deepseq
+                     
+  hs-source-dirs:   test
+
+
+test-suite test-with-lib
+
+  import:           language-spec
+
+  main-is:          Test.hs
+
+  type:             exitcode-stdio-1.0
+  
+  build-depends:    deepseq
+                  , tcm-memo
                   , QuickCheck >= 2.10
                      
-  -- We must provide the full relative path to every C file that the project depends on.
-  c-sources:        memoized-tcm/costMatrixWrapper.c
-                    memoized-tcm/dynamicCharacterOperations.c
-
-  cc-options:       --std=c11
-                     
-  cxx-sources:      memoized-tcm/costMatrix.cpp
-
-  cxx-options:      --std=c++11
-
-  default-language: Haskell2010
-
-  -- This library is required for the C++ standard template library.
-  extra-libraries:  stdc++
-
-  ghc-options:      -O2 -Wall
-
-  hs-source-dirs:   test, src
-                    
-  -- Here we list all directories that contain C header files that the FFI tools will need
-  -- to locate when preprocessing the C files. Without listing the directories containing
-  -- the C header files here, the FFI preprocession (hsc2hs, c2hs,etc.) will fail to locate
-  -- the requisite files.
-  -- Note also, that the parent directory of the nessicary C header files must be specified.
-  -- The preprocesser will not recursively look in subdirectories for C header files!
-  include-dirs:     memoized-tcm
-
-  -- Modules exported by the library.
-  other-modules:    Bio.Character.Exportable.Class
-                    Data.TCM.Memoized
-                    Data.TCM.Memoized.FFI
+  hs-source-dirs:   test
