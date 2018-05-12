@@ -157,6 +157,8 @@ test-suite test-no-lib
   type:             exitcode-stdio-1.0
   
   build-depends:    deepseq
+                  , tasty
+                  , tasty-quickcheck
                      
   hs-source-dirs:   test
 
@@ -170,7 +172,9 @@ test-suite test-with-lib
   type:             exitcode-stdio-1.0
   
   build-depends:    deepseq
-                  , tcm-memo
                   , QuickCheck >= 2.10
-                     
+                  , tasty
+                  , tasty-quickcheck
+                  , tcm-memo
+                                       
   hs-source-dirs:   test
