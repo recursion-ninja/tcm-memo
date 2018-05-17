@@ -18,7 +18,6 @@
 module Bio.Character.Exportable.Class where
 
 
-import Control.Lens
 import Foreign.C.Types 
 
 
@@ -55,44 +54,3 @@ data ExportableCharacterElements
    , exportedElementWidthElements :: Int 
    , exportedCharacterElements :: [CUInt]
    } deriving (Eq, Show)   
-
-
--- |
--- A 'Lens' for the 'exportedElementCount' field
-class HasExportedElementCount s a | s -> a where
-
-    exportedElementCount :: Lens' s a
-    {-# MINIMAL exportedElementCount #-}
-
-
--- | (✔)
-instance HasExportedElementCount ExportableCharacterSequence Int where
-
-    exportedElementCount = lens exportedElementCountSequence (\e x -> e { exportedElementCountSequence = x })
-
-
--- | (✔)
-instance HasExportedElementCount ExportableCharacterElements Int where
-
-    exportedElementCount = lens exportedElementCountElements (\e x -> e { exportedElementCountElements = x })
-
-
--- |
--- A 'Lens' for the 'exportedElementWidth' field
-class HasExportedElementWidth s a | s -> a where
-
-    exportedElementWidth :: Lens' s a
-    {-# MINIMAL exportedElementWidth #-}
-
-
--- | (✔)
-instance HasExportedElementWidth ExportableCharacterSequence Int where
-
-    exportedElementWidth = lens exportedElementWidthSequence (\e x -> e { exportedElementWidthSequence = x })
-
-
--- | (✔)
-instance HasExportedElementWidth ExportableCharacterElements Int where
-
-    exportedElementWidth = lens exportedElementWidthElements (\e x -> e { exportedElementWidthElements = x })
-

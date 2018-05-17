@@ -27,7 +27,6 @@ module Data.TCM.Memoized.FFI
   ) where
 
 import Bio.Character.Exportable.Class
-import Control.DeepSeq
 import Data.Bits
 import Data.Foldable
 import Data.Monoid
@@ -35,7 +34,6 @@ import Foreign         hiding (alignPtr)
 import Foreign.C.Types
 import GHC.Generics           (Generic)
 import System.IO.Unsafe
-import Test.QuickCheck hiding ((.&.), output)
 
 -- import Debug.Trace
 
@@ -78,34 +76,6 @@ newtype MemoizedCostMatrix
       = MemoizedCostMatrix
       { costMatrix :: StablePtr ForeignVoid
       } deriving (Eq, Generic)
-
-
-instance Arbitrary CDynamicChar where
-
-    arbitrary = do
-        alphSize    <- (arbitrary :: Gen Int) `suchThat` (\x -> 0 < x && x <= 64)
-        charSize    <- (arbitrary :: Gen Int) `suchThat` (\x -> 0 < x && x <= 16)
-        numElems    <- (arbitrary :: Gen Int) `suchThat` (\x -> 0 < x && x <= 100)
-        fullBitVals <- vectorOf numElems (arbitrary :: Gen CBufferUnit)
-        -- Note there is a faster way to do this loop in 2 steps by utilizing 2s compliment subtraction and setbit.
-        let mask    = foldl' setBit (zeroBits :: CBufferUnit) [0..numElems]
-        remBitVals  <- if   numElems == 0
-                       then pure []
-                       else (pure . (mask .&.)) <$> (arbitrary :: Gen CBufferUnit)
-        pure CDynamicChar
-           { alphabetSizeChar = toEnum alphSize
-           , dynCharLen       = toEnum charSize
-           , numElements      = toEnum numElems
-           , dynChar          = unsafePerformIO . newArray $ fullBitVals <> remBitVals
-           }
-
-
-instance NFData ForeignVoid
-
-
-instance NFData MemoizedCostMatrix where
-
-    rnf (MemoizedCostMatrix !_) = ()
 
 
 {-
